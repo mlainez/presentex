@@ -109,7 +109,7 @@ defmodule Presentex.Input.Evdev do
   @spec decode(binary(), :big | :little) :: {non_neg_integer(), non_neg_integer(), integer()}
   def decode(bin, endian) when byte_size(bin) >= 8 do
     skip = byte_size(bin) - 8
-    <<_::binary-size(skip), tail::binary-size(8)>> = bin
+    <<_::binary-size(^skip), tail::binary-size(8)>> = bin
 
     case endian do
       :big ->

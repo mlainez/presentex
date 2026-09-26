@@ -119,7 +119,7 @@ defmodule Presentex.Image do
 
   defp pixel(%{pixels: px, width: w}, x, y) do
     off = (y * w + x) * 3
-    <<_::binary-size(off), r, g, b, _::binary>> = px
+    <<_::binary-size(^off), r, g, b, _::binary>> = px
     {r, g, b}
   end
 

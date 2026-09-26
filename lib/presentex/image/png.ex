@@ -47,7 +47,7 @@ defmodule Presentex.Image.PNG do
     stride = width * 3
 
     raw =
-      for <<row::binary-size(stride) <- rgb>>, into: <<>> do
+      for <<row::binary-size(^stride) <- rgb>>, into: <<>> do
         <<0, row::binary>>
       end
 
@@ -137,7 +137,7 @@ defmodule Presentex.Image.PNG do
   defp do_unfilter(_raw, _stride, _bpp, 0, _prev, acc), do: IO.iodata_to_binary(Enum.reverse(acc))
 
   defp do_unfilter(<<filter, rest::binary>>, stride, bpp, rows_left, prev, acc) do
-    <<line::binary-size(stride), tail::binary>> = rest
+    <<line::binary-size(^stride), tail::binary>> = rest
     decoded = apply_filter(filter, line, prev, bpp)
     do_unfilter(tail, stride, bpp, rows_left - 1, decoded, [decoded | acc])
   end
@@ -198,7 +198,7 @@ defmodule Presentex.Image.PNG do
 
   defp recolor(data, 3, plte) do
     for <<idx <- data>>, into: <<>> do
-      <<_::binary-size(idx * 3), r, g, b, _::binary>> = plte
+      <<_::binary-size(^idx * 3), r, g, b, _::binary>> = plte
       <<r, g, b>>
     end
   end

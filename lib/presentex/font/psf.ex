@@ -34,7 +34,7 @@ defmodule Presentex.Font.PSF do
 
     rest = binary_part(bin, headersize, byte_size(bin) - headersize)
     glyph_bytes = length * charsize
-    <<glyph_data::binary-size(glyph_bytes), unicode::binary>> = rest
+    <<glyph_data::binary-size(^glyph_bytes), unicode::binary>> = rest
 
     rows_per = height
     bytes_per_row = div(charsize, rows_per)
@@ -49,7 +49,7 @@ defmodule Presentex.Font.PSF do
   def parse(@psf1_magic <> <<mode, charsize>> <> rest) do
     count = if (mode &&& 1) == 1, do: 512, else: 256
     glyph_bytes = count * charsize
-    <<glyph_data::binary-size(glyph_bytes), _unicode::binary>> = rest
+    <<glyph_data::binary-size(^glyph_bytes), _unicode::binary>> = rest
 
     glyphs = split_glyphs(glyph_data, charsize, charsize, 1)
     {:ok, build(glyphs, %{}, 8, charsize)}
@@ -61,8 +61,8 @@ defmodule Presentex.Font.PSF do
 
   # ── helpers ─────────────────────────────────────────────────────────────────
   defp split_glyphs(data, charsize, rows_per, bytes_per_row) do
-    for <<glyph::binary-size(charsize) <- data>> do
-      for <<row::binary-size(bytes_per_row) <- glyph>>, into: [] do
+    for <<glyph::binary-size(^charsize) <- data>> do
+      for <<row::binary-size(^bytes_per_row) <- glyph>>, into: [] do
         :binary.decode_unsigned(row, :big)
       end
       |> Enum.take(rows_per)

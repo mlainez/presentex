@@ -61,7 +61,7 @@ defmodule Presentex.Framebuffer do
     pad = max(line_bytes - packed_w, 0)
     padding = :binary.copy(<<0>>, pad)
 
-    for <<row::binary-size(row_bytes) <- rgb>>, into: <<>> do
+    for <<row::binary-size(^row_bytes) <- rgb>>, into: <<>> do
       <<pack_row(row, w, format, <<>>)::binary, padding::binary>>
     end
   end
@@ -70,7 +70,7 @@ defmodule Presentex.Framebuffer do
 
   defp write_rows(fd, rgb, w, rows_left, format, bpp, line_bytes, x, y) do
     row_bytes = w * 3
-    <<row::binary-size(row_bytes), rest::binary>> = rgb
+    <<row::binary-size(^row_bytes), rest::binary>> = rgb
     packed = pack_row(row, w, format, <<>>)
     offset = y * line_bytes + x * bpp
     :ok = :file.pwrite(fd, offset, packed)

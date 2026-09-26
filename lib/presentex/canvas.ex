@@ -40,7 +40,7 @@ defmodule Presentex.Canvas do
   @doc "Blit an RGB image (`iw` x `ih`) at `{x, y}`."
   def blit_rgb(%__MODULE__{} = canvas, rgb, iw, _ih, x, y) do
     stride = iw * 3
-    rows = for <<r::binary-size(stride) <- rgb>>, do: r
+    rows = for <<r::binary-size(^stride) <- rgb>>, do: r
     blit_rows(canvas, rows, iw, x, y)
   end
 
